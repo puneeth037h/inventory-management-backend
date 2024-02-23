@@ -170,8 +170,8 @@ app.get('/orders', (req, res) => {
   });
 });
 
-    //inserting new categorires
-    app.post('/insertcategory', (req, res) => {
+//inserting new categorires
+app.post('/insertcategory', (req, res) => {
       const { categoryName,categoryId} = req.body;
     
       // Use parameterized query to prevent SQL injection
@@ -191,9 +191,36 @@ app.get('/orders', (req, res) => {
         // res.status(200).send('Data received and inserted into the database.');
     
       });
-    });
-    //inserting new seller
-    app.post('/insertseller', (req, res) => {
+});
+
+//updating the categories
+app.post('/updatecategory', (req, res) => {
+  const { categoryName, categoryId } = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  let query = `UPDATE category 
+               SET categoryName=? 
+               WHERE categoryId=?`;
+
+  db.query(query, [categoryName, categoryId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    if (results.affectedRows === 0) {
+      res.status(404).send('Category not found.');
+    } else {
+      res.status(200).send('Category updated successfully.');
+    }
+  });
+});
+
+
+//inserting new seller
+app.post('/insertseller', (req, res) => {
       const { sellerId,sellerName,phone,address} = req.body;
     
       // Use parameterized query to prevent SQL injection
@@ -213,10 +240,39 @@ app.get('/orders', (req, res) => {
         // res.status(200).send('Data received and inserted into the database.');
     
       });
-    });
+});
 
-    //inserting new distributer
-    app.post('/insertdistributer', (req, res) => {
+//updating seller
+app.post('/updateseller', (req, res) => {
+  const { sellerId, sellerName, phone, address } = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  const query = `
+    UPDATE seller
+    SET sellerName = ?, phone = ?, address = ?
+    WHERE sellerId = ?;
+  `;
+
+  db.query(query, [sellerName, phone, address, sellerId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    // If no records are affected, it means the sellerId doesn't exist
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Seller not found');
+    }
+
+    console.log('Update results:', results);
+    res.status(200).send('Seller updated successfully');
+  });
+});
+
+
+//inserting new distributer
+app.post('/insertdistributer', (req, res) => {
       const {distributerId,distributerName,phone,address} = req.body;
     
       // Use parameterized query to prevent SQL injection
@@ -236,7 +292,33 @@ app.get('/orders', (req, res) => {
         // res.status(200).send('Data received and inserted into the database.');
     
       });
-    });
+});
+
+//updating distributer
+app.post('/updatedistributer', (req, res) => {
+  const { distributerId, distributerName, phone, address } = req.body;
+
+  // Check if all required fields are provided
+  if (!distributerId || !distributerName || !phone || !address) {
+    return res.status(400).send('All fields (distributerId, distributerName, phone, address) are required.');
+  }
+
+  const query = `UPDATE distributer SET distributerName = ?, phone = ?, address = ? WHERE distributerId = ?`;
+
+  db.query(query, [distributerName, phone, address, distributerId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the distributor was found and updated
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Distributor not found.');
+    } else {
+      res.status(200).send('Distributor updated successfully.');
+    }
+  });
+});
 
 //inserting new customer
 app.post('/insertcustomer', (req, res) => {
@@ -258,6 +340,27 @@ app.post('/insertcustomer', (req, res) => {
     console.log(results);
     // res.status(200).send('Data received and inserted into the database.');
 
+  });
+});
+
+//update customer
+app.post('/updatecustomer', (req, res) => {
+  const { customerId, customerName, phone, address } = req.body;
+
+  const query = `UPDATE customer SET customerName = ?, phone = ?, address = ? WHERE customerId = ?`;
+
+  db.query(query, [customerName, phone, address, customerId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the customer was found and updated
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Customer not found.');
+    } else {
+      res.status(200).send('Customer updated successfully.');
+    }
   });
 });
 
@@ -284,6 +387,32 @@ app.post('/insertproduct', (req, res) => {
   });
 });
 
+//updating the products
+app.post('/updateproduct', (req, res) => {
+  const { productId, productName, categoryId, sellerId, distributerId, description, noOfProducts, price } = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  let query = `UPDATE products 
+               SET productName=?, categoryId=?, sellerId=?, distributerId=?, description=?, noOfProducts=?, price=? 
+               WHERE productId=?`;
+
+  db.query(query, [productName, categoryId, sellerId, distributerId, description, noOfProducts, price, productId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    if (results.affectedRows === 0) {
+      res.status(404).send('Product not found.');
+    } else {
+      res.status(200).send('Product updated successfully.');
+    }
+  });
+});
+
+
 //inserting new orders
 app.post('/insertorder', (req, res) => {
   const {orderId,productId,customerId,purchaseDate} = req.body;
@@ -306,6 +435,28 @@ app.post('/insertorder', (req, res) => {
 
   });
 });
+
+//update orders
+app.post('/updateorder', (req, res) => {
+  const { orderId, productId, customerId, purchaseDate } = req.body;
+
+  const query = `UPDATE orders SET productId = ?, customerId = ?, purchaseDate = ? WHERE orderId = ?`;
+
+  db.query(query, [productId, customerId, purchaseDate, orderId], (err, results) => {
+    if (err) {
+      console.error('Error updating data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the order was found and updated
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Order not found.');
+    } else {
+      res.status(200).send('Order updated successfully.');
+    }
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {
