@@ -389,6 +389,32 @@ app.post('/updatecustomer', (req, res) => {
   });
 });
 
+//delete customer
+app.post('/deletecustomer', (req, res) => {
+  const { customerId } = req.body; // Assuming you're sending the customerId in the request body
+
+  // Validate the customerId to ensure it's not empty and meets your criteria
+  // if (!customerId) {
+  //   return res.status(400).send('A valid customerId is required.');
+  // }
+
+  const query = `DELETE FROM customer WHERE customerId = '${customerId}'`;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error deleting customer:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the customer was found and deleted
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Customer not found.');
+    } else {
+      res.status(200).send('Customer deleted successfully.');
+    }
+  });
+});
+
 //inserting new product
 app.post('/insertproduct', (req, res) => {
   const {productId,productName,categoryId,sellerId,distributerId,description,noOfProducts,price} = req.body;
