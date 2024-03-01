@@ -369,6 +369,31 @@ app.post('/updatedistributer', (req, res) => {
     }
   });
 });
+//deleting distributer
+app.post('/deletedistributer', (req, res) => {
+  const { distributerId } = req.body;
+
+  // Check if categoryId is provided
+  if (!distributerId) {
+    return res.status(400).send('distributerId is required.');
+  }
+
+  const query = `DELETE FROM distributer WHERE distributerId = ?`;
+
+  db.query(query, [distributerId], (err, results) => {
+    if (err) {
+      console.error('Error deleting data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the category was found and deleted
+    if (results.affectedRows === 0) {
+      return res.status(404).send('distributer not found.');
+    } else {
+      res.status(200).send('distributer deleted successfully.');
+    }
+  });
+});
 
 //inserting new customer
 app.post('/insertcustomer', (req, res) => {
