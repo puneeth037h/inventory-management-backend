@@ -295,6 +295,31 @@ app.post('/updateseller', (req, res) => {
   });
 });
 
+//delete seller
+app.post('/deleteseller', (req, res) => {
+  const { sellerId } = req.body;
+
+  // Check if categoryId is provided
+  if (!sellerId) {
+    return res.status(400).send('sellerId is required.');
+  }
+
+  const query = `DELETE FROM seller WHERE sellerId = ?`;
+
+  db.query(query, [sellerId], (err, results) => {
+    if (err) {
+      console.error('Error deleting data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the category was found and deleted
+    if (results.affectedRows === 0) {
+      return res.status(404).send('seller not found.');
+    } else {
+      res.status(200).send('seller deleted successfully.');
+    }
+  });
+});
 
 //inserting new distributer
 app.post('/insertdistributer', (req, res) => {
