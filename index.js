@@ -26,6 +26,33 @@ db.connect((err) => {
 // Express Middleware
 app.use(express.json());
 
+//search
+app.post('/search', (req, res) => {
+  const { tosearch } = req.body;
+
+  // Check if categoryId is provided
+  if (!tosearch) {
+    return res.status(400).send('tosearch is required.');
+  }
+  let a='%';
+  let search =a.concat(tosearch,'%');
+  const query = `SELECT * FROM products WHERE productName LIKE '${search}' `;
+
+  db.query(query,  (err, results) => {
+    if (err) {
+      console.error('Error deleting data:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the category was found and deleted
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Category not found.');
+    } else {
+      res.status(200).send('Category deleted successfully.');
+    }
+  });
+});
+
 // Handle GET request to fetch categories
 app.get('/categories', (req, res) => {
   // Construct a simple SELECT query to retrieve all data from the 'category' table
