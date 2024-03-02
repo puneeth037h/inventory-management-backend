@@ -28,28 +28,22 @@ app.use(express.json());
 
 //search
 app.post('/search', (req, res) => {
-  const { tosearch } = req.body;
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
 
-  // Check if categoryId is provided
-  if (!tosearch) {
-    return res.status(400).send('tosearch is required.');
-  }
-  let a='%';
-  let search =a.concat(tosearch,'%');
-  const query = `SELECT * FROM products WHERE productName LIKE '${search}' `;
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM products WHERE productName LIKE ?`;
 
-  db.query(query,  (err, results) => {
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`%${searchTerm}%`], (err, results) => {
     if (err) {
-      console.error('Error deleting data:', err);
-      return res.status(500).send('Internal Server Error');
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
     }
 
-    // Check if the category was found and deleted
-    if (results.affectedRows === 0) {
-      return res.status(404).send('Category not found.');
-    } else {
-      res.status(200).send('Category deleted successfully.');
-    }
+    console.log(results);
+    res.json(results); // Send the results back to the client
   });
 });
 
