@@ -115,7 +115,7 @@ app.post('/searchorders', (req, res) => {
   const { searchTerm } = req.body;
 
   // Use parameterized query with LIKE operator for partial matches
-  let query = `SELECT * FROM orders WHERE orderId LIKE ? OR productId LIKE ? OR customerId LIKE ? ORDER BY orderId`;
+  let query = `SELECT o.orderId,c.customerName,p.productName,o.purchaseDate FROM orders AS o,customer AS c,products AS p  WHERE (o.orderId LIKE ? OR p.productId LIKE ? OR c.customerId LIKE ?) AND o.productId=p.productId AND o.customerId=c.customerId ORDER BY o.orderId;`;
 
   // Append '%' wildcards to allow for partial matches before and after productName
   db.query(query, [`${searchTerm}%`,`%${searchTerm}%`,`${searchTerm}%`], (err, results) => {
