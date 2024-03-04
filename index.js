@@ -35,7 +35,7 @@ app.post('/search', (req, res) => {
   let query = `SELECT * FROM products WHERE productName LIKE ? OR productId LIKE ? ORDER BY productName`;
 
   // Append '%' wildcards to allow for partial matches before and after productName
-  db.query(query, [`%${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
     if (err) {
       console.error('Error fetching data:', err);
       res.status(500).send('Internal Server Error');
