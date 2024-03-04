@@ -46,6 +46,111 @@ app.post('/search', (req, res) => {
     res.json(results); // Send the results back to the client
   });
 });
+//search categories
+app.post('/searchcatgories', (req, res) => {
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
+
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM category WHERE categoryName LIKE ? OR categoryId LIKE ? ORDER BY categoryName`;
+
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    res.json(results); // Send the results back to the client
+  });
+});
+
+//search seller
+app.post('/searchseller', (req, res) => {
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
+
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM seller WHERE sellerName LIKE ? OR sellerId LIKE ? ORDER BY sellerName`;
+
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    res.json(results); // Send the results back to the client
+  });
+});
+
+//search customer
+app.post('/searchcustomer', (req, res) => {
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
+
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM customer WHERE customerName LIKE ? OR customerId LIKE ? ORDER BY customerName`;
+
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    res.json(results); // Send the results back to the client
+  });
+});
+
+//search orders
+app.post('/searchorders', (req, res) => {
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
+
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM orders WHERE orderId LIKE ? OR productId LIKE ? OR customerId LIKE ? ORDER BY orderId`;
+
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`,`${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    res.json(results); // Send the results back to the client
+  });
+});
+
+//search distributer
+app.post('/searchdistributer', (req, res) => {
+  // Assuming productName is coming from the client-side
+  const { searchTerm } = req.body;
+
+  // Use parameterized query with LIKE operator for partial matches
+  let query = `SELECT * FROM distributer WHERE distributerName LIKE ? OR distributerId LIKE ?  ORDER BY distributerName`;
+
+  // Append '%' wildcards to allow for partial matches before and after productName
+  db.query(query, [`${searchTerm}%`,`%${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    res.json(results); // Send the results back to the client
+  });
+});
+
 
 // Handle GET request to fetch categories
 app.get('/categories', (req, res) => {
