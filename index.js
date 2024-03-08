@@ -588,6 +588,32 @@ app.post('/updatecustomer', (req, res) => {
   });
 });
 
+//delete customer
+app.post('/deletecustomer', (req, res) => {
+  const { customerId } = req.body;
+
+  // Check if customerId is provided
+  if (!customerId) {
+      return res.status(400).send('customerId is required.');
+  }
+
+  const query = `DELETE FROM Customer WHERE customerId = ?`;
+
+  db.query(query, [customerId], (err, results) => {
+      if (err) {
+          console.error('Error deleting customer:', err);
+          return res.status(500).send('Internal Server Error');
+      }
+
+      // Check if the customer was found and deleted
+      if (results.affectedRows === 0) {
+          return res.status(404).send('Customer not found.');
+      } else {
+          res.status(200).send('Customer deleted successfully.');
+      }
+  });
+});
+
 
 //inserting new product
 app.post('/insertproduct', (req, res) => {
@@ -704,6 +730,32 @@ app.post('/updateorder', (req, res) => {
     } else {
       res.status(200).send('Order updated successfully.');
     }
+  });
+});
+
+app.post('/deleteorders', (req, res) => {
+  const { ordersId } = req.body;
+
+  // Check if productId is provided
+  if (!ordersId) {
+    return res.status(400).send('productId is required.');
+  }
+
+  const query = 'DELETE FROM orders WHERE orderId = ?';
+
+  db.query(query, [ordersId], (err, results) => {
+    if (err) {
+      console.error('Error deleting product:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the product was found and deleted
+    if (results.affectedRows === 0) {
+      return res.status(404).send('Product not found.');
+    }
+
+    // Product deleted successfully
+    res.status(200).send('Product deleted successfully.');
   });
 });
 

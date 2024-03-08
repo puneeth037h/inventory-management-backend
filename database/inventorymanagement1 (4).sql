@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2024 at 01:25 PM
+-- Generation Time: Mar 08, 2024 at 06:47 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -51,7 +51,8 @@ INSERT INTO `category` (`categoryId`, `categoryName`) VALUES
 (112, 'Jewelry & Accessorie'),
 (113, 'Baby & Kids'),
 (114, 'Tools & Hardware'),
-(115, 'Arts & Crafts');
+(115, 'Arts & Crafts'),
+(116, 'school');
 
 -- --------------------------------------------------------
 
@@ -314,7 +315,7 @@ ALTER TABLE `seller`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`customerId`) REFERENCES `customer` (`customerId`);
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`customerId`) REFERENCES `customer` (`customerId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `products`
@@ -322,7 +323,7 @@ ALTER TABLE `orders`
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`categoryId`) REFERENCES `category` (`categoryId`) ON DELETE CASCADE,
   ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`sellerId`) REFERENCES `seller` (`sellerId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `products_ibfk_3` FOREIGN KEY (`distributerId`) REFERENCES `distributer` (`distributerId`);
+  ADD CONSTRAINT `products_ibfk_3` FOREIGN KEY (`distributerId`) REFERENCES `distributer` (`distributerId`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
