@@ -49,6 +49,75 @@ app.get('/categorynumber', (req, res) => {
     res.json(results);
   });
 });
+//get customer number
+app.get('/customernumber', (req, res) => {
+
+  let query = 'SELECT COUNT(*) AS noOfCustomer FROM customer';
+
+  // Log the SQL query for debugging purposes
+  console.log(query);
+
+  // Execute the database query
+  db.query(query, (err, results) => {
+    if (err) {
+      // Handle database error
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    // Log the results to the console for debugging
+    console.log(results);
+
+    // Send the results as a JSON response to the client
+    res.json(results);
+  });
+});
+//get product number
+app.get('/productnumber', (req, res) => {
+  
+  let query = 'SELECT COUNT(*) AS noOfProducts FROM products';
+
+  // Log the SQL query for debugging purposes
+  console.log(query);
+
+  // Execute the database query
+  db.query(query, (err, results) => {
+    if (err) {
+      // Handle database error
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    // Log the results to the console for debugging
+    console.log(results);
+
+    // Send the results as a JSON response to the client
+    res.json(results);
+  });
+});
+//get orders number
+app.get('/ordernumber', (req, res) => {
+  
+  let query = 'SELECT COUNT(*) AS noOforders FROM orders';
+
+  // Log the SQL query for debugging purposes
+  console.log(query);
+
+  // Execute the database query
+  db.query(query, (err, results) => {
+    if (err) {
+      // Handle database error
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    // Log the results to the console for debugging
+    console.log(results);
+
+    // Send the results as a JSON response to the client
+    res.json(results);
+  });
+});
 //search
 app.post('/search', (req, res) => {
   // Assuming productName is coming from the client-side
